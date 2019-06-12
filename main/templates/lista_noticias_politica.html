@@ -14,23 +14,27 @@
 <title>Politica</title>
 <p><a href="/noticias">pagina principal</a></p>
  <section>
+ 
  <h1>Seccion de politica</h1>
- <table class="table table-bordered">
+ 
+<table class="table table-bordered">
 <thead class="thead-dark">
     <tr>
       <th scope="col">Titular</th>
       <th scope="col">Autor</th>
       <th scope="col">Imagen</th>
+
       
     </tr>
  </thead>
+ 
  <tbody>
 		{% for d in noticias %}
 		<tr>
-	  		<th scope="col" href={{d.link}}><a >{{d.titulo}}</a></th>
-	  		<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
+			
+	  		<th scope="col"><a href="{{d.link}}">{{d.titulo}}</a></th>
+	  		<th scope="col"><a>{{d.autor}} {{d.fecha}}</a></th>
 	  		<th scope="col"><img style="width: 50%;" src="{{d.imagen}}" alt="image" /></th>
-	  		
 	    </tr>
 		{% endfor %}
  	

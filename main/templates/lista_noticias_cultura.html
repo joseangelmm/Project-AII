@@ -3,7 +3,7 @@
 
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }} {{user.email}} {{user.numeroDeNoticiasBuscadasDeLaCategoriaCultura}}!
+  Hi {{ user.username }} {{user.email}} !
   <p><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
   <p>You are not logged in</p>
@@ -27,8 +27,13 @@
  <tbody>
 		{% for d in noticias %}
 		<tr>
-	  		<th scope="col" href={{d.link}}><a >{{d.titulo}}</a></th>
-	  		<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
+		
+		<th scope="col" >
+		<form method="get" action="{{d.link}}">
+    		<button type="submit">{{d.titulo}}</button>
+		</form>
+		</th>
+			<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
 	  		<th scope="col"><img style="width: 50%;" src="{{d.imagen}}" alt="image" /></th>
 	  		
 	    </tr>

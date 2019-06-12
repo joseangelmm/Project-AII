@@ -10,6 +10,12 @@ from datetime import datetime
 fecha = datetime.now()
 ####DISTINTAS CATEGORÍAS####
 def noticiasCultura(request):
+    if request.user.is_authenticated:
+        for item in gustosUsuario.objects.filter(username=request.user):
+            obj = gustosUsuario.objects.get(username=(item.username))
+            obj.numerosDeNoticiasBuscadasDeLaCategoriaCultura = item.numerosDeNoticiasBuscadasDeLaCategoriaCultura+1
+            obj.save()
+            
     listaNoticias=Noticia.objects.filter(categoria="Cultura")
     fechaActual=str("{}-{}-{}".format(fecha.year, fecha.month, fecha.day))
     if (len(fechaActual.split("-")[1])==1):
@@ -20,10 +26,15 @@ def noticiasCultura(request):
     for item in listaNoticias:
         if (str(item.fecha)==str(fechaDef) or str(item.fecha)==str(fechaDef1)):
             listaDefinitivaNoticias.append(item)
-    
+    print(requests.get)
     return render(request,'lista_noticias_cultura.html', {'noticias':listaDefinitivaNoticias})
 
 def noticiasInternacional(request):
+    if request.user.is_authenticated:
+        for item in gustosUsuario.objects.filter(username=request.user):
+            obj = gustosUsuario.objects.get(username=(item.username))
+            obj.numerosDeNoticiasBuscadasDeLaCategoriaInternacional = item.numerosDeNoticiasBuscadasDeLaCategoriaInternacional+1
+            obj.save()
     listaNoticias=Noticia.objects.filter(categoria="Internacional")
     fechaActual=str("{}-{}-{}".format(fecha.year, fecha.month, fecha.day))
     if (len(fechaActual.split("-")[1])==1):
@@ -37,6 +48,11 @@ def noticiasInternacional(request):
     return render(request,'lista_noticias_internacional.html', {'noticias':listaDefinitivaNoticias})
 
 def noticiasCiencia(request):
+    if request.user.is_authenticated:
+        for item in gustosUsuario.objects.filter(username=request.user):
+            obj = gustosUsuario.objects.get(username=(item.username))
+            obj.numerosDeNoticiasBuscadasDeLaCategoriaTecnologiaYCiencia= item.numerosDeNoticiasBuscadasDeLaCategoriaTecnologiaYCiencia+1
+            obj.save()
     listaNoticias=Noticia.objects.filter(categoria="Ciencia")
     fechaActual=str("{}-{}-{}".format(fecha.year, fecha.month, fecha.day))
     if (len(fechaActual.split("-")[1])==1):
@@ -50,6 +66,11 @@ def noticiasCiencia(request):
     return render(request,'lista_noticias_ciencia.html', {'noticias':listaDefinitivaNoticias})
 
 def noticiasPolitica(request):
+    if request.user.is_authenticated:
+        for item in gustosUsuario.objects.filter(username=request.user):
+            obj = gustosUsuario.objects.get(username=(item.username))
+            obj.numerosDeNoticiasBuscadasDeLaCategoriaPolitica= item.numerosDeNoticiasBuscadasDeLaCategoriaPolitica+1
+            obj.save()
     listaNoticias=Noticia.objects.filter(categoria="Politica")
     fechaActual=str("{}-{}-{}".format(fecha.year, fecha.month, fecha.day))
     if (len(fechaActual.split("-")[1])==1):
@@ -63,11 +84,64 @@ def noticiasPolitica(request):
     return render(request,'lista_noticias_politica.html', {'noticias':listaDefinitivaNoticias})
 ####TODAS LAS SECCIONES####
 def noti(request):
-    noticias=Noticia.objects.all()
+    noticias1=[]
+    noticias=[]
     if request.user.is_authenticated:
         for item in gustosUsuario.objects.filter(username=request.user):
-            print(item.numerosDeNoticiasBuscadasDeLaCategoriaTecnologiaYCiencia)
-    return render(request,'lista_noticias.html', {'noticias':noticias})
+ 
+            totalGustos=item.numerosDeNoticiasBuscadasDeLaCategoriaTecnologiaYCiencia+item.numerosDeNoticiasBuscadasDeLaCategoriaInternacional+item.numerosDeNoticiasBuscadasDeLaCategoriaPolitica+item.numerosDeNoticiasBuscadasDeLaCategoriaCultura
+            gustosCiencia=int((item.numerosDeNoticiasBuscadasDeLaCategoriaTecnologiaYCiencia*10)/totalGustos)+1
+            gustosCultura=int((item.numerosDeNoticiasBuscadasDeLaCategoriaCultura*10)/totalGustos)+1
+            gustosPolitica=int((item.numerosDeNoticiasBuscadasDeLaCategoriaPolitica*10)/totalGustos)+1
+            gustosInternacional=int((item.numerosDeNoticiasBuscadasDeLaCategoriaInternacional*10)/totalGustos)+1
+
+            print(totalGustos)
+            print(gustosCultura)
+            print(gustosCiencia)
+            print(gustosInternacional)
+            print(gustosPolitica)
+        
+        noticiasDef=[]
+        noticias=Noticia.objects.filter(categoria="Ciencia").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:gustosCiencia]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Cultura").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:gustosCultura]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Internacional").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:gustosInternacional]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Politica").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:gustosPolitica]:
+            noticiasDef.append(item)    
+        
+        
+        
+                    
+    else:
+        noticiasDef=[]
+        noticias=Noticia.objects.filter(categoria="Ciencia").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:3]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Cultura").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:3]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Internacional").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:2]:
+            noticiasDef.append(item)
+        noticias=Noticia.objects.filter(categoria="Politica").order_by('fecha')
+        noticias1=noticias.reverse()
+        for item in noticias1[0:2]:
+            noticiasDef.append(item)
+             
+    return render(request,'lista_noticias.html', {'noticias':noticiasDef})
 ############################################
 def extraerCodigo(url):
     response=requests.get(url)
@@ -376,7 +450,6 @@ def deleteTables():
       
 def iniciarElMundo(self):
     #deleteTables()
-    
     noticiasPublicoCiencia()
     noticiasPublicoCultura()
     noticiasPublicoInternacional()
