@@ -1,10 +1,11 @@
-#encoding:utf-8
+# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 from django.shortcuts import render
 from main.forms import NoticiasSearchForm
 from main.models import Noticia, gustosUsuario
 from bs4 import BeautifulSoup
 from django.http.response import HttpResponse
-from django.shortcuts import render_to_response, get_object_or_404
+from django.shortcuts import render_to_response
 import requests
 from datetime import datetime
 fecha = datetime.now()
@@ -33,7 +34,7 @@ def noticiasCultura(request):
 ####BUSQUEDAS#######
 def noticiasBusqueda(request):
     form = NoticiasSearchForm(request.GET)
-
+    
     if request.user.is_authenticated:
         for item in gustosUsuario.objects.filter(username=request.user):
             obj = gustosUsuario.objects.get(username=(item.username))
@@ -54,15 +55,17 @@ def noticiasBusqueda(request):
                     obj.numerosDeNoticiasBuscadasDeLaCategoriaInternacional= item.numerosDeNoticiasBuscadasDeLaCategoriaInternacional+1
                     obj.save()     
         else:
-            noticias=Noticia.objects.filter(categoria="Cultura")
+            noticias=Noticia.objects.all().order_by("fecha")
+          
             
     else:
         if "/?q=" in str(request):  
             noticias = form.search()
         else:
-            noticias=Noticia.objects.filter(categoria="Cultura")
-    
-    return render_to_response('search.html', {'noticias': noticias})
+            
+            noticias=Noticia.objects.all().order_by("fecha")
+           
+    return render_to_response('search.html', {'noticias': noticias[0:40]})
 ####################
 
 def obtenerCat(request):
@@ -170,10 +173,7 @@ def noti(request):
         noticias=Noticia.objects.filter(categoria="Politica").order_by('fecha')
         noticias1=noticias.reverse()
         for item in noticias1[0:gustosPolitica]:
-            noticiasDef.append(item)    
-        
-        
-        
+            noticiasDef.append(item)       
                     
     else:
         noticiasDef=[]
@@ -497,8 +497,12 @@ def noticiasPublicoCultura():
             Noticia(titulo=titulares[i], fecha=fechas[i],autor=autores[i],link=listaLinks[i],categoria="Cultura", imagen=listaLinksImagenes[i]).save()
     
 def noticiasDiarioCiencia():
+   
     links = []
     linksImag = []
+    titulares=[]
+    fechas=[]
+    autores=[]
     
     codHtml = extraerCodigo("https://www.eldiario.es/temas/ciencia/")
     
@@ -517,11 +521,6 @@ def noticiasDiarioCiencia():
                 linksImag.append(str("http://www.sanisidrolonas.com.ar/wp-content/uploads/2011/05/sin-imagen12.jpg"))
         
        
-    titulares=[]
-    fechas=[]
-    autores=[]
-    
-    titulares=[]
     for item in links:
         codHtml=extraerCodigo(str(item))
         
@@ -547,9 +546,11 @@ def noticiasDiarioCiencia():
         s=item.replace("-","").replace(" ","")
         w=s.split("/")
         nuevasFechas.append(w[2]+"-"+w[1]+"-"+w[0])
+        
+    print(links)
     for i in range(len(titulares)):  
         if not(Noticia.objects.filter(titulo=titulares[i])):
-            Noticia(titulo=titulares[i], fecha=fechas[i],autor=autores[i],link=links[i],categoria="Ciencia", imagen=linksImag[i]).save()
+            Noticia(titulo=titulares[i], fecha=nuevasFechas[i],autor=autores[i],link=links[i],categoria="Ciencia", imagen=linksImag[i]).save()
         
         
         
@@ -562,10 +563,10 @@ def noticiasDiarioInternacional():
     for i in codHtml.find_all('li',class_='lst-item cf '):
         for j in i.find_all('h2',class_="bkn headline typ-x4"):
             for p in j.find_all('a',class_='lnk'):
-               if not("autores" in p["href"]):
-                   links.append(str("https://www.eldiario.es"+p["href"]))
-                   break
-        
+                if not("autores" in p["href"]):
+                    links.append(str("https://www.eldiario.es"+p["href"]))
+                    break
+         
         for j in i.find_all('div',class_='mg fl'):
             if(len(i.find_all('img'))>=1):
                 for p in i.find_all('img'):
@@ -574,7 +575,6 @@ def noticiasDiarioInternacional():
                 linksImag.append(str("http://www.sanisidrolonas.com.ar/wp-content/uploads/2011/05/sin-imagen12.jpg"))
         
        
-    titulares=[]
     fechas=[]
     autores=[]
     
@@ -618,9 +618,9 @@ def noticiasDiarioPolitica():
     for i in codHtml.find_all('li',class_='lst-item cf '):
         for j in i.find_all('h2',class_="bkn headline typ-x4"):
             for p in j.find_all('a',class_='lnk'):
-               if not("autores" in p["href"]):
-                   links.append(str("https://www.eldiario.es"+p["href"]))
-                   break
+                if not("autores" in p["href"]):
+                    links.append(str("https://www.eldiario.es"+p["href"]))
+                    break
         
         for j in i.find_all('div',class_='mg fl'):
             if(len(i.find_all('img'))>=1):
@@ -630,7 +630,7 @@ def noticiasDiarioPolitica():
                 linksImag.append(str("http://www.sanisidrolonas.com.ar/wp-content/uploads/2011/05/sin-imagen12.jpg"))
         
        
-    titulares=[]
+
     fechas=[]
     autores=[]
     
@@ -665,7 +665,6 @@ def noticiasDiarioPolitica():
             Noticia(titulo=titulares[i], fecha=fechas[i],autor=autores[i],link=links[i],categoria="Politica", imagen=linksImag[i]).save()
 
 def noticiasDiarioCultura():
-    print("aaaaaaaaaaa")
     links = []
     linksImag = []
     
@@ -675,8 +674,8 @@ def noticiasDiarioCultura():
         for j in i.find_all('h2',class_="bkn headline typ-x4"):
             for p in j.find_all('a',class_='lnk'):
                 if not("autores" in p["href"]):
-                   links.append(str("https://www.eldiario.es"+p["href"]))
-                   break
+                    links.append(str("https://www.eldiario.es"+p["href"]))
+                    break
         
         for j in i.find_all('div',class_='mg fl'):
             if(len(i.find_all('img'))>=1):
@@ -684,7 +683,6 @@ def noticiasDiarioCultura():
                     linksImag.append(str("https://www.eldiario.es"+p["src"]))        
             else:
                 linksImag.append(str("http://www.sanisidrolonas.com.ar/wp-content/uploads/2011/05/sin-imagen12.jpg"))   
-    titulares=[]
     fechas=[]
     autores=[]
     titulares=[]
@@ -714,7 +712,6 @@ def noticiasDiarioCultura():
         w=s.split("/")
         nuevasFechas.append(w[2]+"-"+w[1]+"-"+w[0])
     for i in range(len(titulares)):  
-        print("aaaaaa")
         if not(Noticia.objects.filter(titulo=titulares[i])):
             Noticia(titulo=titulares[i], fecha=fechas[i],autor=autores[i],link=links[i],categoria="Cultura", imagen=linksImag[i]).save()
                                 
@@ -723,20 +720,18 @@ def deleteTables():
     Noticia.objects.all().delete()
       
 def iniciarElMundo(self):
-    """
-    deleteTables()
-    noticiasPublicoCiencia()
-    noticiasPublicoCultura()
-    noticiasPublicoInternacional()
-    noticiasPublicoPolitica()
     
-    noticiasPoliticaELMUNDO()
-    noticiasCulturaELMUNDO()
+    noticiasPublicoCiencia()
+    #noticiasPublicoCultura()
+    #noticiasPublicoInternacional()
+    #noticiasPublicoPolitica()
+    #noticiasPoliticaELMUNDO()
+    #noticiasCulturaELMUNDO()
     noticiasCienciaELMUNDO()
     """
     noticiasDiarioCiencia()
-    #noticiasDiarioCultura()
-    #noticiasDiarioInternacional()
-    #noticiasDiarioPolitica()
-    
+    noticiasDiarioCultura()
+    noticiasDiarioInternacional()
+    noticiasDiarioPolitica()
+    """
     return HttpResponse("OK")

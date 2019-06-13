@@ -36,8 +36,6 @@ urlpatterns = [
     
     path('search/', noticiasBusqueda),
     
-    path('pruebas/', obtenerCat),
-    
     
     path('cultura',noticiasCultura),    
     path('ciencia',noticiasCiencia),

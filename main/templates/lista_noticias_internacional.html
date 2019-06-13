@@ -1,21 +1,47 @@
 <!DOCTYPE html>
 <html lang='es'>
-
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head >
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }} {{user.email}} {{user.numeroDeNoticiasBuscadasDeLaCategoriaCultura}}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
+  <p align=right> Hi {{ user.username }} {{user.email}} {{user.numeroDeNoticiasBuscadasDeLaCategoriaCultura}}! </p>
+  <p align=right><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">login</a>
 {% endif %}
 {% endblock %}
 
-<title>Internacional</title>
-<p><a href="/noticias">pagina principal</a></p>
+<title>Noticias</title>
+
+<ul class="nav nav-pills nav-justified">
+  <li class="nav-item">
+    <a class="nav-link " href="/noticias">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/cultura">Cultura</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/ciencia">Ciencia</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/internacional">Internacional</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/politica">Politica</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/search">Buscar una noticia</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/poblarMundo">Recargar noticias</a>
+  </li>
+</ul>
  <section>
- <h1>Seccion internacional</h1>
- <table class="table table-bordered">
+ <h1 align=center>Seccion internacional</h1>
+ <table class="table table">
 <thead class="thead-dark">
     <tr>
       <th scope="col">Titular</th>

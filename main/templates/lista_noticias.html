@@ -1,10 +1,13 @@
 <!DOCTYPE html>
 <html lang='es'>
-
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head >
 {% block content %}
 {% if user.is_authenticated %}
-  Hi {{ user.username }} {{user.email}} {{user.numeroDeNoticiasBuscadasDeLaCategoriaCultura}}!
-  <p><a href="{% url 'logout' %}">logout</a></p>
+  <p align=right> Hi {{ user.username }} {{user.email}} {{user.numeroDeNoticiasBuscadasDeLaCategoriaCultura}}! </p>
+  <p align=right ><a href="{% url 'logout' %}">logout</a></p>
 {% else %}
   <p>You are not logged in</p>
   <a href="{% url 'login' %}">login</a>
@@ -13,17 +16,35 @@
 
 <title>Noticias</title>
 
+<ul class="nav nav-pills nav-justified">
+  <li class="nav-item">
+    <a class="nav-link " href="/noticias">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/cultura">Cultura</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/ciencia">Ciencia</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/internacional">Internacional</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/politica">Politica</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/search">Buscar una noticia</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/poblarMundo">Recargar noticias</a>
+  </li>
+</ul>
  <section>
- <h1>Noticias</h1>
-  <p><a href="/cultura">cultura</a></p>
-  <p><a href="/ciencia">ciencia</a></p>
-  <p><a href="/internacional">internacional</a></p>
-  <p><a href="/politica">politica</a></p>
-  <p><a href="/search">busquedas</a></p>
+ <h1 align=center>Noticias recomendadas</h1>
  
  
- <table class="table table-bordered">
-<thead class="thead-dark">
+<table class="table table">
+<thead class="thead-dark" >
     <tr>
       <th scope="col">Titular</th>
       <th scope="col">Autor</th>
@@ -32,16 +53,16 @@
     </tr>
  </thead>
  <tbody>
-		{% for d in noticias %}
-		<tr>
-	  		<th scope="col"><a  href="{{d.link}}">{{d.titulo}}</a></th>
-	  		<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
-	  		<th scope="col"><img style="width: 50%;" src="{{d.imagen}}" alt="image" /></th>
+{% for d in noticias %}
+	<tr>
+  		<th scope="col" ><a  href="{{d.link}}">{{d.titulo}}</a></th>
+  		<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
+  		<th scope="col"><img  class="rounded mx-auto d-block" style="width: 50%;" src="{{d.imagen}}" /></th>
 	  		
-	    </tr>
-		{% endfor %}
+    </tr>
+{% endfor %}
  	
-  </tbody>
+ </tbody>
 </table>
   </section>
 </html>

@@ -8,6 +8,7 @@ class NoticiaIndex(indexes.SearchIndex, indexes.Indexable):
     titulo=indexes.EdgeNgramField(model_attr='titulo')
     link=indexes.EdgeNgramField(model_attr='link')
     categoria=indexes.EdgeNgramField(model_attr='categoria')
+    fecha=indexes.EdgeNgramField(model_attr='fecha')
     
     def get_model(self):
         return Noticia

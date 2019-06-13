@@ -1,4 +1,6 @@
 {{object.titulo}}
 {{object.autor}}
 {{object.link}}
+
+{{object.fecha}}
 {{object.categoria}}

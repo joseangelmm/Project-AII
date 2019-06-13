@@ -1,16 +1,61 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+</head >
+
+
+<title>Search</title>
+
+<ul class="nav nav-pills nav-justified">
+  <li class="nav-item">
+    <a class="nav-link " href="/noticias">Home</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/cultura">Cultura</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/ciencia">Ciencia</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="/internacional">Internacional</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/politica">Politica</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link " href="/search">Buscar una noticia</a>
+  </li>
+</ul>
+ 
+ 
 {% block content %}
-<form type="get" action=".">
+<form align=center type="get" action=".">
     <input type="text" name="q">
     <button type="submit">Search</button>
 </form>
-
-{% for noticia in noticias %}
-<h1>{{ noticia.titulo }}</h1>
-<p>
-    {{ noticia.autor }}
-    
-</p>
-<a href="{{noticia.link}}"> Ir a la noticia</a>
-<p > {{ noticia.categoria }}</p>
-{% endfor %}
 {% endblock %}
+
+<table class="table table">
+<thead class="thead-dark">
+    <tr>
+      <th scope="col">Titular</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Fecha</th>
+      
+    </tr>
+ </thead>
+ <tbody>
+		{% for d in noticias %}
+		<tr>
+	  		<th scope="col" ><a  href="{{d.link}}">{{d.titulo}}</a></th>
+	  		<th scope="col"><a >{{d.autor}} </a></th>
+	  		<th scope="col"><a>{{d.fecha}} </a></th>
+	  		
+	    </tr>
+		{% endfor %}
+ 	
+  </tbody>
+</table>
+
