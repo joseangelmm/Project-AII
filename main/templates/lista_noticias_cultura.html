@@ -27,12 +27,8 @@
  <tbody>
 		{% for d in noticias %}
 		<tr>
-		
-		<th scope="col" >
-		<form method="get" action="{{d.link}}">
-    		<button type="submit">{{d.titulo}}</button>
-		</form>
-		</th>
+	
+			<th scope="col"><a href="culturas/{{d.link}}">{{d.titulo}}</a></th>
 			<th scope="col"><a >{{d.autor}} {{d.fecha}}</a></th>
 	  		<th scope="col"><img style="width: 50%;" src="{{d.imagen}}" alt="image" /></th>
 	  		

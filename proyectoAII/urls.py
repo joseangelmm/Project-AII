@@ -17,19 +17,29 @@ from django.contrib import admin
 from django.urls import path, include
 import django.views
 from main.views import iniciarElMundo, noti, noticiasCultura, noticiasCiencia,\
-    noticiasInternacional, noticiasPolitica
+    noticiasInternacional, noticiasPolitica,obtenerCat,noticiasBusqueda
 from django.conf.urls.static import static
 from django.views.generic.base import TemplateView
 from django.conf import settings
+from django.conf.urls import *
+import re
 
 
 urlpatterns = [
+
+    url(r'^culturas/.*', obtenerCat),
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('poblarMundo/', iniciarElMundo),
     path('noticias/', noti),
-    path('cultura',noticiasCultura),
+    
+    path('search/', noticiasBusqueda),
+    
+    path('pruebas/', obtenerCat),
+    
+    
+    path('cultura',noticiasCultura),    
     path('ciencia',noticiasCiencia),
     path('internacional',noticiasInternacional),
     path('politica',noticiasPolitica),
